@@ -1,4 +1,5 @@
 from app import app, db
+from app.models import Tag, Game, Platform
 from flask import jsonify, redirect, request
 
 games = [
@@ -27,8 +28,11 @@ def api_id(id):
 def tags():
     if request.method == 'POST':
         name = request.args.get('name', '')
-        
-        return 
+        t = Tag(name=name)
+        db.session.add(t)
+        db.session.commit()
+        return jsonify(t.serialize)
     else:
-        return 
+        tags = Tag.query.all()
+        return jsonify([t.serialize for t in tags])
 
